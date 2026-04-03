@@ -8,7 +8,7 @@ from number_tool import number_handler
 from repeat_tool import repeat_handler
 
 # ✅ TOKEN (এখানেই থাকবে)
-TOKEN = "8565891108:AAFD-GBtIF9jpRndaDpsvb52zoccTyco7A0"
+TOKEN = "8658364991:AAEYny80WCZh3lgf0JMFpYhcxdiO0tE31so"
 
 # ===== BLUE KEYBOARD SYSTEM =====
 try:
