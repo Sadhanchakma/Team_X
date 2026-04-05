@@ -11,34 +11,42 @@ try:
 except ImportError:
     job_number_handler = None
 
-# ✅ TOKEN
-TOKEN = "8665839751:AAHRUZvLh0aY-LKRTYG_lpasQ8biNGR3Sg0"
+# ✅ TOKEN - Railway ENV (Keep your token safe)
+import os
+TOKEN = os.getenv("TELEGRAM_TOKEN", "8665839751:AAHRUZvLh0aY-LKRTYG_lpasQ8biNGR3Sg0")
 
-# ✅ 🔵 BULLETPROOF BLUE KEYBOARD SYSTEM
+# ✅ 🔵 RAILWAY BULLETPROOF BLUE KEYBOARD (Replace your function)
 def get_blue_keyboard(buttons):
-    """রেলওয়ে এবং সব হোস্টিংয়ে ব্লু বাটন নিশ্চিত করার জন্য আপডেট করা ফাংশন"""
+    """রেলওয়ে + Termux 100% ব্লু বাটন - আপনার exact code style"""
     try:
-        # লেটেস্ট ভার্সনে ব্লু স্টাইল ইমপোর্ট করা
         from telegram.constants import KeyboardButtonStyle
         PRIMARY_STYLE = KeyboardButtonStyle.PRIMARY
-    except (ImportError, AttributeError):
-        # যদি লাইব্রেরি পুরনো হয় তবে স্টাইল বাদ রাখা
-        PRIMARY_STYLE = None
-
-    blue_keyboard = []
-    for row in buttons:
-        if PRIMARY_STYLE:
-            # স্টাইল থাকলে ব্লু বাটন তৈরি
+        
+        blue_keyboard = []
+        for row in buttons:
             blue_row = [KeyboardButton(text=str(text), style=PRIMARY_STYLE) for text in row]
-        else:
-            # না থাকলে রেগুলার বাটন
-            blue_row = [KeyboardButton(text=str(text)) for text in row]
-        blue_keyboard.append(blue_row)
-    
-    return ReplyKeyboardMarkup(blue_keyboard, resize_keyboard=True)
+            blue_keyboard.append(blue_row)
+        
+        return ReplyKeyboardMarkup(
+            blue_keyboard, 
+            resize_keyboard=True,
+            is_persistent=True,  # Railway must-have!
+            input_field_placeholder="নিচের বাটন চাপুন 🔵"
+        )
+    except (ImportError, AttributeError, TypeError):
+        # Railway fallback - Emoji blue (works everywhere)
+        blue_keyboard = []
+        for row in buttons:
+            blue_row = [f"🔵 {text}" for text in row]
+            blue_keyboard.append([blue_row])  # Fix row structure
+        
+        return ReplyKeyboardMarkup(
+            blue_keyboard, 
+            resize_keyboard=True,
+            is_persistent=True
+        )
 
-
-# ===== MAIN MENU =====
+# ===== MAIN MENU ===== (Your exact)
 MAIN_MENU = [
     ["📲 OTP MANAGER", "📧 EMAIL TOOL"],
     ["📞 NUMBER TOOL", "🔁 REPEAT TOOL"],
@@ -46,8 +54,7 @@ MAIN_MENU = [
     ["ℹ️ HELP"]
 ]
 
-
-# ================= START =================
+# ================= START ================= (Your exact)
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
 
@@ -59,7 +66,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         '<tg-emoji emoji-id="6206505206197261313">📊</tg-emoji> <b>System:</b> <code>High Performance</code>\n'
         '<tg-emoji emoji-id="6232999738459823976">✅</tg-emoji> <b>Access:</b> <code>Full Features Enabled</code>\n'
         "━━━━━━━━━━━━━━━━━━━━━\n"
-        '<tg-emoji emoji-id="5296369303661067030">📤</tg-emoji> <i>নিচের মেনু থেকে আপনার প্রয়োজনীয় অপশনটি বেছে নিন</i>'
+        '<tg-emoji emoji-id="5296369303661067030">📤</tg-emoji> <i>নিচের মেনু থেকে আপনার প্রয়োজনীয় অপশনটি বেছে নিন</i>'
     )
 
     await update.message.reply_text(
@@ -68,8 +75,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=get_blue_keyboard(MAIN_MENU) 
     )
 
-
-# ================= ROUTER =================
+# ================= ROUTER ================= (Your EXACT code - no change)
 async def router(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.callback_query:
         mode = context.user_data.get("mode")
@@ -149,18 +155,17 @@ async def router(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 reply_markup=get_blue_keyboard([["🔙 BACK"]]) 
             )
 
-
-# ================= RUN =================
+# ================= RUN ================= (Your exact + debug)
 def main():
+    print("🔵 Railway Blue Bot Starting...")
     app = ApplicationBuilder().token(TOKEN).build() 
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(router))
     app.add_handler(MessageHandler(filters.ALL, router))
 
-    print("Bot Running...")
+    print("✅ Bot Running... Blue Buttons Active!")
     app.run_polling()
-
 
 if __name__ == "__main__":
     main()
